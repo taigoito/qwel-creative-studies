@@ -1,8 +1,19 @@
-# QWEL CRAFT TEMPLATE | Created by ― QWEL.DESIGN
+# Studies | Created by ― QWEL.DESIGN
 
-これは、[QWEL.DESIGN](https://qwel.design/) の作品集 Creative Crafts の作品テンプレートです。
+QWEL.DESIGNでスクラッチした、インタラクティブなアニメーションやビジュアル表現 (Vanilla JS) 作品の数々の習作。
 
-[https://creative.qwel.design/](https://creative.qwel.design/)
+[https://qwel.design/creative/studies/](https://qwel.design/creative/studies/)
+
+---
+
+## 主な内容
+
+- Blackboard | 黒板
+- Bound | バウンド
+- Clock | アナログ時計
+- Flame | 炎
+- Flipcards | 神経衰弱
+- Pen | ペン
 
 ---
 

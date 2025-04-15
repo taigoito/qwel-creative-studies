@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackboard | QWEL in Action</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Noto+Sans:wght@100..900&family=Noto+Serif:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+      #canvas-wrap {
+        width: 720px;
+        max-width: 100%;
+        margin: 30px auto;
+      }
+      
+      #canvas {
+        max-width: 100%;
+        background: #030;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1 id="logo"><a href="https://qwel.design/"><img src="../logo_animation.svg" alt="QWEL in Action"></a></h1>
+      <ul class="breadcrumb">
+        <li class="breadcrumb__item"><a href="../../../">QWEL in Action</a></li>
+        <li class="breadcrumb__item"><a href="../../">Creative Crafts</a></li>
+        <li class="breadcrumb__item"><a href="../">Creative Studies</a></li>
+        <li class="breadcrumb__item breadcrumb__item--current"><span>Blackboard</span></li>
+      </ul>
+    </header>
+    <main class="main">
+      <h2 class="main__title">Blackboard | Created by <span> ― QWEL.DESIGN</span></h2>
+      <ul class="main__list">
+        <li class="main__listItem--spec">ドラグ操作で黒板に線を描くプログラム</li>
+        <li class="main__listItem--spec">指南書に沿って制作したJavaScriptの表現作品としての処女作</li>
+        <li class="main__listItem--spec">初期の作品のため、タッチデバイス非対応</li>
+      </ul>
+      <div id="canvas-wrap">
+        <canvas id="canvas" width="720" height="480"></canvas>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer__inner">
+        <a class="footer__item footer__item--github" href="https://github.com/taigoito" target="_blank" rel="noopener">
+          <span data-icon="ei-sc-github" data-size="m"></span>
+          GitHub
+        </a>
+        <a class="footer__item footer__item--contact" href="https://tools.qwel.design/contact-form/" target="_blank" rel="noopener">
+          <span data-icon="ei-envelope" data-size="m"></span>
+          Contact Me
+        </a>
+        <small class="footer__copyright"></small>
+      </div>
+    </footer>
+    <script src="../init.js"></script>
+    <script>
+      var cnt,
+        points = [];
+  
+      function init() {
+        var canvas = document.getElementById('canvas')
+        cnt = canvas.getContext('2d');
+        cnt.strokeStyle = "#fff";
+        canvas.onmousedown = mymousedown;
+        canvas.onmousemove = mymousemove;
+        canvas.onmouseup = mymouseup;
+      }
+  
+      function mymousedown(e) {
+        points = [{ x: e.offsetX, y: e.offsetY }];
+      }
+  
+      function mymousemove(e) {
+        if (points.length > 0) {
+          points.push({ x: e.offsetX, y: e.offsetY });
+          cnt.beginPath();
+          cnt.moveTo(points[0].x, points[0].y);
+          for (var i = 1; i < points.length; i++) {
+            cnt.lineTo(points[i].x, points[i].y);
+          }
+          cnt.stroke();
+        }
+      }
+  
+      function mymouseup(e) {
+        points = [];
+      }
+  
+      init();
+    </script>
+  </body>
+</html>

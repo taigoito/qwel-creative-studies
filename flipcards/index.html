@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flipcards | QWEL in Action</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Noto+Sans:wght@100..900&family=Noto+Serif:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+      #table-wrap {
+        width: 420px;
+        max-width: 100%;
+        margin: 30px auto;
+      }
+      
+      table {
+        border-collapse: separate;
+        border-spacing: 4px;
+      }
+
+      .mycard {
+        box-sizing: border-box;
+        padding: 4px;
+        border: 1px solid #999;
+        border-radius: 4px;
+        box-shadow: #999 2px 2px;
+        text-align: center;
+        color: #999;
+        font-size: 2.4em;
+      }
+
+      .canvas {
+        width: 70px;
+        max-width: 100%;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1 id="logo"><a href="https://qwel.design/"><img src="../logo_animation.svg" alt="QWEL in Action"></a></h1>
+      <ul class="breadcrumb">
+        <li class="breadcrumb__item"><a href="../../../">QWEL in Action</a></li>
+        <li class="breadcrumb__item"><a href="../../">Creative Crafts</a></li>
+        <li class="breadcrumb__item"><a href="../">Creative Studies</a></li>
+        <li class="breadcrumb__item breadcrumb__item--current"><span>Flipcards</span></li>
+      </ul>
+    </header>
+    <main class="main">
+      <h2 class="main__title">Flipcards | Created by <span> ― QWEL.DESIGN</span></h2>
+      <ul class="main__list">
+        <li class="main__listItem--spec">トランプの一般的なゲームの1つである神経衰弱</li>
+        <li class="main__listItem--spec">2015年頃の作品のため、ライブラリとして "jQuery" 使用</li>
+      </ul>
+      <div id="table-wrap">
+        <table id="table"></table>
+      </div>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer__inner">
+        <a class="footer__item footer__item--github" href="https://github.com/taigoito" target="_blank" rel="noopener">
+          <span data-icon="ei-sc-github" data-size="m"></span>
+          GitHub
+        </a>
+        <a class="footer__item footer__item--contact" href="https://tools.qwel.design/contact-form/" target="_blank" rel="noopener">
+          <span data-icon="ei-envelope" data-size="m"></span>
+          Contact Me
+        </a>
+        <small class="footer__copyright"></small>
+      </div>
+    </footer>
+    <script src="../init.js"></script>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      Array.prototype.shuffle = function () {
+        var i = this.length;
+        while (i) {
+          var j = Math.floor(Math.random() * i);
+          var t = this[--i];
+          this[i] = this[j];
+          this[j] = t;
+        }
+        return this;
+      }
+  
+      var prevCard = null,
+        flipTimmer = NaN,
+        pause = false;
+  
+      function init() {
+  
+        var cards = [];
+  
+        for (var i = 1; i <= 10; i++) {
+          cards.push(i);
+          cards.push(i);
+        }
+        cards.shuffle();
+  
+        var tbody = document.createElement('tbody');
+        for (var i = 0; i < 4; i++) {
+          var tr = document.createElement('tr');
+          for (var j = 0; j < 5; j++) {
+            var td = document.createElement('td');
+            td.className = 'mycard back';
+            var canvas = document.createElement('canvas');
+            canvas.className = 'canvas';
+            canvas.width = 80;
+            canvas.height = 120;
+            canvas.onclick = flip;
+            canvas.index = i * 5 + j;
+            canvas.number = cards[i * 5 + j];
+            canvas.reverse = false;
+            canvas.lock = false;
+            td.appendChild(canvas);
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+        $('#table').append(tbody);
+  
+        for (var i = 0; i < 20; i++) {
+          drowBack(i);
+        }
+      }
+  
+      function drowBack(i) {
+        var canvas = document.getElementsByClassName('canvas');
+        var cnt = canvas[i].getContext('2d');
+        cnt.save();
+        cnt.fillStyle = '#f00';
+        cnt.fillRect(0, 0, 80, 120);
+        cnt.fillStyle = '#fff';
+        cnt.beginPath();
+        cnt.moveTo(40, 0);
+        cnt.lineTo(0, 60);
+        cnt.lineTo(40, 120);
+        cnt.lineTo(80, 60);
+        cnt.closePath();
+        cnt.fill();
+        cnt.translate(40, 60);
+        cnt.rotate(Math.PI / 4);
+        cnt.fillStyle = '#f00';
+        cnt.fillRect(-20, -20, 40, 40);
+        cnt.fillStyle = '#fff';
+        cnt.beginPath();
+        cnt.moveTo(0, 0);
+        cnt.arc(0, 0, 20, 0, Math.PI * 2);
+        cnt.closePath();
+        cnt.fill();
+        cnt.restore();
+      }
+  
+      function drowNumber(i, num) {
+        var canvas = document.getElementsByClassName('canvas');
+        var cnt = canvas[i].getContext('2d');
+        cnt.clearRect(0, 0, 80, 120);
+        cnt.font = '36px "Times New Roman"';
+        cnt.textAlign = 'center';
+        cnt.textBaseline = 'middle';
+        cnt.fillText(num, 40, 60);
+        cnt.restore();
+      }
+  
+      function flip(e) {
+        var canvas = document.getElementsByClassName('canvas'),
+          i = e.target.index,
+          num = e.target.number;
+        reverse = e.target.reverse;
+        lock = e.target.lock;
+  
+        if (pause || lock) {
+          return;
+        }
+  
+        if (reverse) {
+          drowBack(i);
+          e.target.reverse = false;
+          return;
+        } else {
+          drowNumber(i, num);
+          e.target.reverse = true;
+        }
+  
+        if (prevCard === null) {
+          prevCard = {
+            index: i,
+            number: num
+          }
+          return;
+        } else {
+          canvas[prevCard.index].lock = true;
+          canvas[i].lock = true;
+          if (num === prevCard.number) {
+            prevCard = null;
+          } else {
+            pause = true;
+            flipTimmer = setTimeout(function () {
+              drowBack(prevCard.index);
+              drowBack(i);
+              canvas[prevCard.index].reverse = false;
+              canvas[i].reverse = false;
+              canvas[prevCard.index].lock = false;
+              canvas[i].lock = false;
+              prevCard = null;
+              pause = false;
+              flipTimmer = NaN;
+            }, 1500)
+          }
+        }
+      }
+  
+      init();
+
+    </script>
+  </body>
+</html>

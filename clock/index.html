@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock | QWEL in Action</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Noto+Sans:wght@100..900&family=Noto+Serif:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+      #canvas-wrap {
+        width: 480px;
+        max-width: 100%;
+        margin: 30px auto;
+      }
+      
+      #clock {
+        max-width: 100%;
+      }
+
+      #dateTime {
+        margin: 30px 0;
+        text-align: center;
+      }
+      
+      #date, #day, #time {
+        margin: 0 .25em;
+        font-size: 1.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1 id="logo"><a href="https://qwel.design/"><img src="../logo_animation.svg" alt="QWEL in Action"></a></h1>
+      <ul class="breadcrumb">
+        <li class="breadcrumb__item"><a href="../../../">QWEL in Action</a></li>
+        <li class="breadcrumb__item"><a href="../../">Creative Crafts</a></li>
+        <li class="breadcrumb__item"><a href="../">Creative Studies</a></li>
+        <li class="breadcrumb__item breadcrumb__item--current"><span>Clock</span></li>
+      </ul>
+    </header>
+    <main class="main">
+      <h2 class="main__title">Clock | Created by <span> ― QWEL.DESIGN</span></h2>
+      <ul class="main__list">
+        <li class="main__listItem--spec">現在時刻を取得して示すアナログ時計</li>
+      </ul>
+      <div id="canvas-wrap">
+        <canvas id="clock" width="480" height="480"></canvas>
+      </div>
+      <p id="dateTime"><span id="date"></span><span id="day"></span><span id="time"></span></p>
+    </main>
+    <footer id="footer" class="footer">
+      <div class="footer__inner">
+        <a class="footer__item footer__item--github" href="https://github.com/taigoito" target="_blank" rel="noopener">
+          <span data-icon="ei-sc-github" data-size="m"></span>
+          GitHub
+        </a>
+        <a class="footer__item footer__item--contact" href="https://tools.qwel.design/contact-form/" target="_blank" rel="noopener">
+          <span data-icon="ei-envelope" data-size="m"></span>
+          Contact Me
+        </a>
+        <small class="footer__copyright"></small>
+      </div>
+    </footer>
+    <script src="../init.js"></script>
+    <script>
+      var cnt, h, m, s,
+        week = ['日', '月', '火', '水', '木', '金', '土'];
+
+      function init() {
+        cnt = document.getElementById('clock').getContext('2d');
+        setInterval(tick, 1000);
+      }
+
+      function tick() {
+        var now = new Date();
+        h = now.getHours() % 12;
+        m = now.getMinutes();
+        s = now.getSeconds();
+
+        drowClock(h, m, s);
+
+        var date = now.toLocaleDateString(),
+          day = '(' + week[now.getDay()] + ')',
+          time = now.toLocaleTimeString();
+        document.getElementById('date').innerHTML = date;
+        document.getElementById('day').innerHTML = day;
+        document.getElementById('time').innerHTML = time;
+      }
+
+      function drowClock(h, m, s) {
+        cnt.clearRect(0, 0, 480, 480);
+        cnt.strokeStyle = 'black';
+
+        for (var i = 0; i < 60; i++) {
+          var r = Math.PI / 30 * i;
+          cnt.save();
+          cnt.translate(240, 240);
+          cnt.rotate(r);
+          cnt.lineWidth = (i % 5) === 0 ? 3 : 1;
+          cnt.beginPath();
+          cnt.moveTo(0, -210);
+          cnt.lineTo(0, -195);
+          cnt.stroke();
+          cnt.restore();
+        }
+
+        var radH = (Math.PI * 2) / 12 * (h + m / 60);
+        var radM = (Math.PI * 2) / 60 * m;
+        var radS = (Math.PI * 2) / 60 * s;
+        drowHand(radH, 120, 6, "#79c6ec");
+        drowHand(radM, 150, 4, "#99cc33");
+        drowHand(radS, 180, 2, "#ffc080");
+      }
+
+      function drowHand(rotation, length, width, color) {
+        cnt.save();
+        cnt.lineWidth = width;
+        cnt.strokeStyle = color;
+        cnt.translate(240, 240);
+        cnt.rotate(rotation);
+        cnt.beginPath();
+        cnt.moveTo(0, 0);
+        cnt.lineTo(0, -length);
+        cnt.stroke();
+        cnt.restore();
+      }
+
+      init();
+    </script>
+  </body>
+</html>
